@@ -1,48 +1,45 @@
+import javax.imageio.IIOException;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 public class Main {
-    // HİYERAŞİ---> ArrayIndexOutOfBoundsException->IndexOutOfBoundsException->RuntimeException->Exception
-    public static void main(String[] args) {
-	// kodumuz compile olurken değil compile olduktan sonra çalışırken alacağımız hataları yönetme
-        // olası hatalara karşı uygulamayı bug a sokmamak kırmamak çalışmaya devam edebilmesi
-        try{
-            int[] sayilar=new int[]{2,3,5};
-            System.out.println(sayilar[5]);
-        }// birden fazla hata olabileceği için catch blogu birden fazla kullanılabilir
-        catch (ArrayIndexOutOfBoundsException exception){
+
+    public static void main(String[] args)  {
+	/*
+	        Checked exceptions
+	        derleyici tarafından kontrol edilen olulabilecek hata durumlarıdır kontrol edildiği için
+	        hata blokları oluşturulamadan derlenemez dolayısıyla program çalışmaz yani belirtmek zorundayız
+	        ıoexception,awt exception,sql exception örneğin
+	 */
+
+        // dosya okuma
+        // bu dosya başka biryerdede kullanılabilecği veya bu method başka biyerde kullanılabilecği için (FileNotFoundException)
+        // iki çözümü var throws yani hata fırlatma bu şekilde handle eden try catche yazmak zorunda ikincisi try blokları arasına yazmak
+        BufferedReader bufferedReader=null;
+        int total=0;
+        try {
+            bufferedReader=new BufferedReader(new FileReader("C:\\Users\\hp\\Desktop\\exceptionChecked\\src\\towns"));
+            String line=null;
+            while((line=bufferedReader.readLine())!=null){
+                total+=Integer.valueOf(line);
+            }
+            System.out.println("Sayiların toplamı: "+total);
+        }catch (FileNotFoundException fileNotFoundException){ // DOSYA BULUNAMAZSA
+            System.out.println(fileNotFoundException);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (NumberFormatException exception) {
             System.out.println(exception);
         }
-        catch (StringIndexOutOfBoundsException exception){
-            System.out.println(exception);
-        }// hiçbir hata eşleşmez ise sıradai blok çalışır loglama işlemleri için düşünebilir kullanıcı bir beklenmeyen hata durumunda programcıya düzeltmesi için hatanın nerden -- oludugu gibi işlemler için
-        catch (Exception exception){
-            System.out.println("Loglandı "+exception);
+        finally { // dosyayı her iki türlüde kapatmak için
+            try{
+                bufferedReader.close();
+            }catch (Exception exception) {
+                System.out.println(exception);
+            }
         }
-        finally {
-            System.out.println("Hata olsada olmasada sonunda çalışacak kısım...");
-        }
-        // try hata olup olmadığını deneyeceğimiz ve çalışacak blok
-        // catch hata yakalandığında çalışacak blok
-        // finally hata yakalansada yakalanmasada son kısımda çalışacak blok bir veritabanına bağlandığımızda işlemi
-        // tamamlasakta tamamlamasakta bağlantıyı finally kısmında sonlandırabiliriz.
-        // exception hiyeraşisi
-        /*
-            exception yazdığımız uygulamalarda kodlara yönelik yapmış oldugumuz hatalar
-        exceptionu kodlar ile kontrol altına alabiliyoruz
-        errorlar bizim kodlarla müdahale edemeyeceğimiz hatalardır mesela sanal makine hataları
-        bütün hatalar exception classından inherit edilir yani extend edilir
-        runtime exception unchecked exceptiondur bizim onları kontrol altına almamız lazım java bunları kontrol etmiyo demektir
-	        arithmetic exception sayısal hatalar yani bir yaş girilsin istiyoruz belli bir sınırın dısındaysa
-	        nullpointer exception referansı olmayan bir nesneyi kullanmaya çalıştığımızda
-	        classcast exception tip dönüşüm hatası
-	        indexoutofboundexception arraylerle alakalı sınırların dışına çıkılması
-       checked exceptionlar:
-	        ıo exception
-	        sql exception
-	        awt exception
-
-        bütün exceptionlar exception classından inherit edilir
-
-        */
-
 
     }
 }
